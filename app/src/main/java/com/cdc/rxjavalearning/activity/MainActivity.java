@@ -11,6 +11,7 @@ import com.cdc.rxjavalearning.R;
 
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by Charlie on 2016/7/26.
@@ -28,7 +29,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String[] names = new String[]{"广州大学", "数学与信息科学", "郑汉荣"};
-                Observable.from(names).subscribe(new Action1<String>() {
+                rx.Observable.from(names)
+                        .flatMap(new Func1<String, Observable<String>>() {
+                            @Override
+                            public Observable<String> call(String s) {
+                                return Observable.from(new  String[]{s+"Hello"});
+                            }
+                        })
+                        .subscribe(new Action1<String>() {
                     @Override
                     public void call(String name) {
                         tv.append(name + "\n");
