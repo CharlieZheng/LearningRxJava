@@ -2,23 +2,12 @@ package com.cdc.rxjavalearning.entity;
 
 /**
  * Created by Charlie on 2016/7/28.
+ *
+ * @see {http://apistore.baidu.com/apiworks/servicedetail/794.html}
  */
 public class PhoneResult {
-    /**
-     * errNum : 0
-     * retMsg : success
-     * retData : {"phone":"15210011578","prefix":"1521001","supplier":"移动","province":"北京","city":"北京","suit":"152卡"}
-     */
     private int errNum;
     private String retMsg;
-    /**
-     * phone : 15210011578
-     * prefix : 1521001
-     * supplier : 移动
-     * province : 北京
-     * city : 北京
-     * suit : 152卡
-     */
     private RetDataEntity retData;
 
     public void setErrNum(int errNum) {
