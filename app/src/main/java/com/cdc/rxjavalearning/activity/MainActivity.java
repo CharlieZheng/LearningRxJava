@@ -29,21 +29,45 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String[] names = new String[]{"广州大学", "数学与信息科学", "郑汉荣"};
-                rx.Observable.from(names)
-                        .flatMap(new Func1<String, Observable<String>>() {
-                            @Override
-                            public Observable<String> call(String s) {
-                                return Observable.from(new  String[]{s+"Hello"});
-                            }
-                        })
-                        .subscribe(new Action1<String>() {
+                Observable.from(names).map(new Func1<String, User>() {
                     @Override
-                    public void call(String name) {
-                        tv.append(name + "\n");
+                    public User call(String s) {
+
+                        return new User(s);
+                    }
+                }).flatMap(new Func1<User, Observable<Stu>>() {
+                    @Override
+                    public Observable<Stu> call(User user) {
+                        return Observable.from(new Stu[]{new Stu(user.name)});
+                    }
+                    //                            @Override
+                    //                            public Observable<String> call(String s) {
+                    //                                return Observable.from(new  String[]{s+"Hello"});
+                    //                            }
+                }).subscribe(new Action1<Stu>() {
+                    @Override
+                    public void call(Stu stu) {
+                        tv.append(stu.name + "\n");
                     }
                 });
             }
         });
         tv = (TextView) findViewById(R.id.tv);
+    }
+
+    private class User {
+        public User(String name) {
+            this.name = name;
+        }
+
+        private String name;
+    }
+
+    private class Stu {
+        public Stu(String name) {
+            this.name = name;
+        }
+
+        private String name;
     }
 }
