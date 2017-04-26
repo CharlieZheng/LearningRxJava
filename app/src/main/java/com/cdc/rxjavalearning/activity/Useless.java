@@ -4,10 +4,8 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 
-/**
- * Created by Charlie on 2016/7/27.
- */
-public class Useless {
+
+class Useless {
     Observer<String> observer = new Observer<String>() {
         @Override
         public void onCompleted() {

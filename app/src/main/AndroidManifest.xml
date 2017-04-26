@@ -1,8 +1,7 @@
-<manifest
-    package="com.cdc.rxjavalearning"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cdc.rxjavalearning">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,10 +10,16 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.RetrofitActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity2" />
+        <activity android:name=".activity.Rx_Filter_Activity" />
+        <activity android:name=".activity.Rx_From_Activity" />
+        <activity android:name=".activity.Rx_Map_Activity" />
+        <activity android:name=".activity.Rx_Merge_Activity" />
     </application>
 
 </manifest>

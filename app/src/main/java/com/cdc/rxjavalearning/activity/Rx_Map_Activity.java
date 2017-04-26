@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -39,6 +37,7 @@ public class Rx_Map_Activity extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                flatMap();
                 // 一、map操作符
                 //                Observable.just(1, 2, 3, 4, 5).map(new Func1<Integer, String>() {
                 //                    @Override
@@ -62,27 +61,27 @@ public class Rx_Map_Activity extends AppCompatActivity {
                 //                    }
                 //                });
                 // 二、scan操作符
-                Observable.from(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8}).scan(new Func2<Integer, Integer, Integer>() {
-                    @Override
-                    public Integer call(Integer integer, Integer integer2) {
-                        return integer * integer2;
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Integer integer) {
-                        Log.i(tag, "" + integer);
-                    }
-                });
+//                Observable.from(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8}).scan(new Func2<Integer, Integer, Integer>() {
+//                    @Override
+//                    public Integer call(Integer integer, Integer integer2) {
+//                        return integer * integer2;
+//                    }
+//                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Integer>() {
+//                    @Override
+//                    public void onCompleted() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Integer integer) {
+//                        Log.i(tag, "" + integer);
+//                    }
+//                });
 
                 // 三、groupBy操作符
                 //            调用例子如下：
@@ -185,14 +184,15 @@ public class Rx_Map_Activity extends AppCompatActivity {
     }
 
     // flatMap操作符开始
-    public void flatMap() {
-        Observable.just("南昌", "深圳", "天津", "北京").flatMap(new Func1<String, Observable<WeatherInfo>>() {
+    private void flatMap() {
+        Observable.just("南昌", "深圳", "天津", "北京").flatMap(new Func1<String, Observable<String>>() {
             @Override
-            public Observable<WeatherInfo> call(String s) {
-                return getWeather(s);
+            public Observable<String> call(String s) {
+//                return getWeather(s);
+                return Observable.from(getWeatherInfo(s).getWeather());
             }
-        }).observeOn(AndroidSchedulers.mainThread()).//更新ui一定要加这句
-                subscribe(new Subscriber<WeatherInfo>() {
+        }).observeOn(AndroidSchedulers.mainThread()).// 更新ui一定要加这句
+                subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {
 
@@ -204,31 +204,54 @@ public class Rx_Map_Activity extends AppCompatActivity {
             }
 
             @Override
-            public void onNext(WeatherInfo weatherInfo) {
-                //更新ui
+            public void onNext(String weatherInfo) {
+                // 更新ui
+                tv.append(weatherInfo + "\n");
             }
         });
     }
 
     //新建天气信息类
-    class WeatherInfo {
+    private class WeatherInfo {
+        private final String city;
+        private final List<String> weather;
 
+        public WeatherInfo(String city) {
+            this.city = city;
+            this.weather = new ArrayList<>();
+            this.weather.add("8:00 19摄氏度");
+            this.weather.add("12:00 27摄氏度");
+            this.weather.add("14:00 33摄氏度");
+            this.weather.add("17:00 25摄氏度");
+            this.weather.add("22:00 17摄氏度");
+        }
+
+        public List<String> getWeather() {
+            return weather;
+        }
+
+        @Override
+        public String toString() {
+            return "WeatherInfo{" +
+                    "city='" + city + '\'' +
+                    ", weather=" + weather +
+                    '}';
+        }
     }
 
     private Observable<WeatherInfo> getWeather(final String city) {
-        Observable<WeatherInfo> observable = Observable.create(new Observable.OnSubscribe<WeatherInfo>() {
+       return Observable.create(new Observable.OnSubscribe<WeatherInfo>() {
             @Override
             public void call(Subscriber<? super WeatherInfo> subscriber) {
                 subscriber.onNext(getWeatherInfo(city));
                 subscriber.onCompleted();
             }
-        }).subscribeOn(Schedulers.io());//网络请求一定要加这句
-        return observable;
+        }).subscribeOn(Schedulers.io());// 网络请求一定要加这句
     }
 
     private WeatherInfo getWeatherInfo(String city) {
         //模拟网络请求返回weatherinfo
-        return new WeatherInfo();
+        return new WeatherInfo(city);
     }
 
     //南昌－>能够获取南昌天气的observable->更新ui
@@ -258,17 +281,17 @@ public class Rx_Map_Activity extends AppCompatActivity {
     }
 
     class Person {
-        String name;
+        final String name;
 
-        public Person(String name) {
+        Person(String name) {
             this.name = name;
         }
     }
 
-    class Male extends Person {
-        public boolean hasJJ;
+    private class Male extends Person {
+        private final boolean hasJJ;
 
-        public Male(boolean hasJJ, String name) {
+        Male(boolean hasJJ, String name) {
             super(name);
             this.hasJJ = hasJJ;
         }

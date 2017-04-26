@@ -13,9 +13,7 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
-/**
- * Created by Charlie on 2016/7/26.
- */
+
 public class MainActivity extends AppCompatActivity {
     private Button bt;
     private TextView tv;
@@ -56,18 +54,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class User {
-        public User(String name) {
+        private final String name;
+        User(String name) {
             this.name = name;
         }
 
-        private String name;
     }
 
     private class Stu {
-        public Stu(String name) {
+        private final String name;
+        Stu(String name) {
             this.name = name;
         }
 
-        private String name;
     }
 }

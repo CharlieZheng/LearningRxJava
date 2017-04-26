@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:padding="4dp"
-        android:text="TextView"/>
+        android:padding="4dp"/>
 
     <Button
         android:id="@+id/bt"
@@ -20,6 +19,5 @@
         android:layout_below="@id/tv"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:padding="4dp"
-        android:text="Button"/>
+        android:padding="4dp"/>
 </RelativeLayout>

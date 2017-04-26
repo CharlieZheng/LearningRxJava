@@ -3,9 +3,6 @@ package com.cdc.rxjavalearning.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Charlie on 2016/7/28.
- */
 public class CommitParam {
 
     private String short_name;

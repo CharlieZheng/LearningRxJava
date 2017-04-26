@@ -1,13 +1,9 @@
 package com.cdc.rxjavalearning.impl;
 
-/**
- * Created by Charlie on 2016/7/28.
- *
- * @see {http://apistore.baidu.com/apiworks/servicedetail/794.html}
- */
 
 import com.cdc.rxjavalearning.entity.CommitParam;
 import com.cdc.rxjavalearning.entity.PhoneResult;
+import com.cdc.rxjavalearning.entity.Responce;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -28,5 +24,8 @@ public interface PhoneService {
 
     @GET("/apistore/mobilenumber/mobilenumber")
     Observable<PhoneResult> getPhoneResult(@Header("apikey") String apikey, @Query("phone") String phone);
+
+    @GET("/mobile/get")
+    Observable<Responce> getPhoneResult(@Query("phone") int phone, @Query("key") String key, @Query("dtype") String dtype);
 
 }

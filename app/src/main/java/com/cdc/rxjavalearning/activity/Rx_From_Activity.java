@@ -19,12 +19,10 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 
-/**
- * Created by Charlie on 2016/7/26.
- */
 public class Rx_From_Activity extends AppCompatActivity {
     private Button bt;
     private TextView tv;
+    private Subscriber<String> subscriber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,19 +32,8 @@ public class Rx_From_Activity extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 一、创建Observable和Subscriber对象
-                //通过create创建observable对象，在call中调用subscriber的onnext方法
-                Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
-                    @Override
-                    public void call(Subscriber<? super String> subscriber) {
-                        for (int i = 0; i < 20; i++) {
-                            subscriber.onNext("fuck i is " + i);
-                        }
-                        subscriber.onCompleted();
-                    }
-                });
                 //上面的代码我们已经构建了一个观察者，我们接下来新建一个订阅者
-                Subscriber<String> subscriber = new Subscriber<String>() {
+                subscriber = new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
                         Log.i("rxjava", "onCompleted");
@@ -66,7 +53,7 @@ public class Rx_From_Activity extends AppCompatActivity {
                 //通过调用subscribe方法使观察者和订阅者产生关联，一旦订阅就观察者就开始发送消息
                 //                observable.subscribe(subscriber);
                 //在下面的例子代码中，我们从一个已有的列表中创建一个Observable序列：
-                List<String> items = new ArrayList<String>();
+                List<String> items = new ArrayList<>();
                 items.add("1");
                 items.add("10");
                 items.add("100");
@@ -148,7 +135,11 @@ public class Rx_From_Activity extends AppCompatActivity {
         tv = (TextView) findViewById(R.id.tv);
     }
 
-    //    private Context getActivity() {
-    //        return Rx_From_Activity.this;
-    //    }
+    @Override
+    protected void onStop() {
+        if (!subscriber.isUnsubscribed()) {
+            subscriber.unsubscribe();
+        }
+        super.onStop();
+    }
 }

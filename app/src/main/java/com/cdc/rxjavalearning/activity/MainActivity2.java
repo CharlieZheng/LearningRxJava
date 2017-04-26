@@ -3,6 +3,7 @@ package com.cdc.rxjavalearning.activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,14 +18,11 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Charlie on 2016/7/27.
- */
 public class MainActivity2 extends AppCompatActivity {
 
     private Button bt;
     private ImageView iv;
-    int drawableRes = R.mipmap.ic_launcher;
+    private static final int drawableRes = R.mipmap.ic_launcher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +35,7 @@ public class MainActivity2 extends AppCompatActivity {
                 Observable.create(new Observable.OnSubscribe<Drawable>() {
                     @Override
                     public void call(Subscriber<? super Drawable> subscriber) {
-                        Drawable drawable = getTheme().getDrawable(drawableRes);
+                        Drawable drawable = ContextCompat.getDrawable(MainActivity2.this, drawableRes);
                         subscriber.onNext(drawable);
                         subscriber.onCompleted();
                     }

@@ -12,16 +12,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Charlie on 2016/7/28.
- */
 public class AppUtil {
 
     /**
      * 获取已安装的APP的列表
      *
-     * @param context
-     * @return
      */
     public static List<AppInfo> getAppList(Context context) {
         List<AppInfo> appInfoList = new ArrayList<>();
@@ -38,7 +33,7 @@ public class AppUtil {
         return appInfoList;
     }
 
-    public static String getFormatTime(long time) {
+    private static String getFormatTime(long time) {
         if (time <= 0) {
             return "";
         }

@@ -2,9 +2,6 @@ package com.cdc.rxjavalearning.entity;
 
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by Charlie on 2016/7/28.
- */
 public class AppInfo {
 
     private String name;

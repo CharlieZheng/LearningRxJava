@@ -6,9 +6,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Charlie on 2016/7/28.
- */
 public abstract class BaseRequest<Service, Result> {
 
     public void doRequest() {
