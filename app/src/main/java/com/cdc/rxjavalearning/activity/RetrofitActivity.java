@@ -1,6 +1,7 @@
 package com.cdc.rxjavalearning.activity;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cdc.rxjavalearning.R;
+import com.cdc.rxjavalearning.entity.AppInfo;
 import com.cdc.rxjavalearning.entity.BaseRequest;
 import com.cdc.rxjavalearning.entity.CommitParam;
 import com.cdc.rxjavalearning.entity.PhoneResult;
@@ -17,8 +19,15 @@ import com.cdc.rxjavalearning.impl.PhoneService;
 import com.cdc.rxjavalearning.util.PhoneApi;
 
 import retrofit2.Call;
+import rx.Observable;
 import rx.Observer;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func0;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -47,6 +56,158 @@ public class RetrofitActivity extends AppCompatActivity {
                 query2();
             }
         });
+    }
+
+    public static void main(String[] args) {
+        final Subscriber<String> subscriber = new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void onNext(String s) {
+                System.out.println(s);
+            }
+        };
+        /*final Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+        };*/
+        Observable<String> observable;
+        Subscription subscription;
+        String[] array;
+        /*// 1 create
+        observable = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onCompleted(); // 执行到此处不再往下执行了，神奇
+                subscriber.onNext("onNext");
+                subscriber.onError(new Throwable());
+            }
+        });
+        subscription = observable.subscribe(subscriber);
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();*/
+        /*// 2 just
+        observable = Observable.just("1", "2", "3", "4");
+        subscription = observable.subscribe(subscriber);
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();*/
+        /*// 3 from
+        array = new String[]{"a", "b", "c", "d"};
+        observable = Observable.from(array);
+        subscription = observable.subscribe(subscriber);
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();*/
+        /*// 4 使用Action接口代替Subscriber
+        array = new String[]{"a", "b", "c", "d"};
+        observable = Observable.from(array);
+        subscription = observable.subscribe(new Action1<String>() {
+            @Override
+            public void call(String s) {
+                System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + s);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+            }
+        }, new Action0() {
+            @Override
+            public void call() {
+                System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+            }
+        });
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();*/
+        /*// 5 map
+        final AppInfo[] appInfoArray = new AppInfo[]{new AppInfo("name1"), new AppInfo("name2"), new AppInfo("name3"), new AppInfo("name4")};
+        subscription = Observable.from(appInfoArray)
+                .map(new Func1<AppInfo, String>() {
+                    @Override
+                    public String call(AppInfo appInfo) {
+                        return appInfo.getName();
+                    }
+                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        System.out.println("App's name is " + s);
+                    }
+                });
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();*/
+        // 6 map尝试处理一对多关系，在事件回调函数onNext中，形参只能是Observable<T>
+        final AppInfo[] appInfoArray = new AppInfo[]{new AppInfo("name1", "abcd"),
+                new AppInfo("name2", "efgh"),
+                new AppInfo("name3", "ijkl"),
+                new AppInfo("name4", "mnop")};
+        subscription = Observable.from(appInfoArray)
+                .map(new Func1<AppInfo, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(AppInfo appInfo) {
+                        return Observable.from(appInfo.moduleList);
+                    }
+                })
+                .subscribe(new Subscriber<Observable<String>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Observable<String> stringObservable) {
+                        System.out.println(stringObservable.toString());
+                    }
+                });
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();
+        // 7 flatMap登场
+        /*final AppInfo[] appInfoArray = new AppInfo[]{new AppInfo("name1", "abcd"),
+                new AppInfo("name2", "efgh"),
+                new AppInfo("name3", "ijkl"),
+                new AppInfo("name4", "mnop")};*/
+        subscription = Observable.from(appInfoArray)
+                .flatMap(new Func1<AppInfo, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(AppInfo appInfo) {
+                        return Observable.from(appInfo.moduleList);
+                    }
+                })
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + s);
+                    }
+                });
+        if (!subscription.isUnsubscribed()) subscription.unsubscribe();
     }
 
 //        private void query(final EditText phoneView) {

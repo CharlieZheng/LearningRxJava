@@ -2,7 +2,22 @@ package com.cdc.rxjavalearning.entity;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class AppInfo {
+    public AppInfo() {
+    }
+
+    public AppInfo(String name) {
+        this.name = name;
+    }
+
+    public AppInfo(String name, String string) {
+        this.name = name;
+        moduleList.addAll(Arrays.asList(string.split("")));
+    }
 
     private String name;
 
@@ -13,6 +28,8 @@ public class AppInfo {
     private String versionName;
 
     private Drawable icon;
+
+    public List<String> moduleList = new ArrayList<>();
 
     public String getName() {
         return name;

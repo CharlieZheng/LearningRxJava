@@ -1,1 +1,5 @@
 [给Android开发者的RxJava详解](http://gank.io/post/560e15be2dca930e00da1083)
+
+1. Subscriber被多个Observable订阅，当第一个Observable处理事件到onCompleted被执行后，Subscriber不再处理其它Observable的事件。
+2. 上面提到的这一点让我感觉Observable和Subscriber之间有一一对应的关系，一个Subscriber不能监听多个Observable的事件。
+3. flatMap可用于Retrofit中的请求嵌套的原因是，在flatMap后返回一个Observable继续发送下续事件。
